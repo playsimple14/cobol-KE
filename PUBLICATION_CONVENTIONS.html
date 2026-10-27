@@ -1,0 +1,868 @@
+<title>Publishing CodeRAG Research</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Design plan: Academic publication guide with clear hierarchy,
+     research-specific conventions, and venue-targeted guidance.
+     Uses neutral palette with semantic color for priority levels. */
+
+  :root {
+    /* Color tokens */
+    --bg: #fafafa;
+    --fg: #1a1a1a;
+    --fg-muted: #666;
+    --border: #e0e0e0;
+    --accent: #2563eb;
+    --accent-light: #dbeafe;
+    --success: #059669;
+    --warning: #d97706;
+    --critical: #dc2626;
+    --code-bg: #f3f4f6;
+
+    /* Type tokens */
+    --font-display: "Merriweather", Georgia, serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --font-mono: "Courier New", monospace;
+
+    /* Spacing */
+    --gap: 1.5rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f0f0f;
+      --fg: #f5f5f5;
+      --fg-muted: #999;
+      --border: #333;
+      --accent-light: #1e3a8a;
+      --code-bg: #1f2937;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0f0f0f;
+    --fg: #f5f5f5;
+    --fg-muted: #999;
+    --border: #333;
+    --accent-light: #1e3a8a;
+    --code-bg: #1f2937;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    margin: 0;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    line-height: 1.2;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0 0 1rem 0;
+    color: var(--fg);
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  code {
+    background: var(--code-bg);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  pre {
+    background: var(--code-bg);
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid var(--border);
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-block: 2rem;
+  }
+
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .header p {
+    font-size: 1.1rem;
+    color: var(--fg-muted);
+  }
+
+  .section {
+    margin-bottom: 2.5rem;
+  }
+
+  .subsection {
+    margin-top: 1.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--accent-light);
+  }
+
+  .card {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .card h4 {
+    margin-top: 0;
+  }
+
+  .priority-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin: 0.75rem 0;
+    font-size: 0.95rem;
+  }
+
+  .priority-critical {
+    background: rgba(220, 38, 38, 0.1);
+    border-left: 4px solid var(--critical);
+    color: var(--fg);
+  }
+
+  .priority-high {
+    background: rgba(217, 119, 6, 0.1);
+    border-left: 4px solid var(--warning);
+    color: var(--fg);
+  }
+
+  .priority-medium {
+    background: rgba(37, 99, 235, 0.1);
+    border-left: 4px solid var(--accent);
+    color: var(--fg);
+  }
+
+  .priority-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .venue-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+
+  .venue-table th,
+  .venue-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .venue-table th {
+    background: var(--accent-light);
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .venue-table tr:hover {
+    background: var(--code-bg);
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+
+  .comparison-table td, .comparison-table th {
+    padding: 0.75rem;
+    text-align: left;
+    border: 1px solid var(--border);
+  }
+
+  .comparison-table th {
+    background: var(--accent-light);
+    font-weight: 600;
+  }
+
+  .comparison-table td:first-child {
+    font-weight: 500;
+  }
+
+  .checkmark::before { content: "✓ "; color: var(--success); font-weight: bold; }
+  .x-mark::before { content: "✗ "; color: var(--critical); font-weight: bold; }
+
+  .quick-ref {
+    background: var(--accent-light);
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+  }
+
+  .quick-ref ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  .quick-ref li {
+    margin: 0.5rem 0;
+  }
+
+  .flow-diagram {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+
+  ul, ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin: 0.5rem 0;
+  }
+
+  .metric-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
+  .metric-card {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .metric-card h4 {
+    margin-top: 0;
+    color: var(--accent);
+    font-size: 1rem;
+  }
+
+  .metric-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--fg-muted);
+  }
+
+  .next-steps {
+    background: linear-gradient(135deg, var(--accent-light), rgba(37, 99, 235, 0.05));
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .next-steps h3 {
+    margin-top: 0;
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.4rem; }
+    h3 { font-size: 1.1rem; }
+
+    .metric-box {
+      grid-template-columns: 1fr;
+    }
+
+    .comparison-table {
+      font-size: 0.9rem;
+    }
+
+    .comparison-table td, .comparison-table th {
+      padding: 0.5rem;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="header">
+    <h1>Publishing CodeRAG Research: Venue & Convention Guide</h1>
+    <p>Strategic pathways to publish your triple-source Code RAG system for COBOL knowledge extraction</p>
+  </div>
+
+  <div class="section">
+    <h2>Your Project at a Glance</h2>
+    <p><strong>Triple-Source Code RAG for COBOL Business Rule Extraction</strong></p>
+    <p>You've built a structure-aware retrieval system combining AST boundaries, Symbol Tables (COBOL data dictionary), and Call Graphs to extract business rules from legacy COBOL programs. This is novel research that combines program analysis, information retrieval, and LLM grounding.</p>
+
+    <div class="quick-ref">
+      <strong>Core Strengths:</strong>
+      <ul>
+        <li><strong>Zero dependencies:</strong> Runnable research artifact (reproducibility gold standard)</li>
+        <li><strong>COBOL-specific:</strong> First to combine all three structures; IBM/Watsonx positioning opportunity</li>
+        <li><strong>Practical impact:</strong> Addresses real enterprise modernization pain</li>
+        <li><strong>Evaluation-ready:</strong> Baseline ablation framework already exists</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>1. Which Research Convention?</h2>
+    <p>The convention depends on your venue and positioning. Here are the three main paths:</p>
+
+    <div class="subsection">
+      <h3>Path A: Information Retrieval (IR) Convention</h3>
+      <p><strong>Best for:</strong> ACL, EMNLP, SIGIR, or specialized IR venues</p>
+
+      <div class="card">
+        <h4>Structure</h4>
+        <pre>1. Abstract (250 words)
+2. Introduction (2-3 pages)
+3. Related Work (2 pages) — IR baselines
+4. Approach/Method (3-4 pages)
+5. Evaluation (4-5 pages)
+   - Dataset description
+   - Metrics: Precision@k, Recall@k, NDCG
+   - Baselines comparison
+   - Statistical significance tests
+6. Results (2-3 pages)
+7. Discussion & Limitations (1-2 pages)
+8. Conclusion (0.5 page)</pre>
+      </div>
+
+      <h4>Key IR Conventions:</h4>
+      <ul>
+        <li><strong>Metrics:</strong> NDCG, Mean Reciprocal Rank (MRR), Precision@k, Recall@k, F1</li>
+        <li><strong>Baselines:</strong> Minimum 3-5 baselines (Random, BM25, semantic search, state-of-art)</li>
+        <li><strong>Significance testing:</strong> t-tests or bootstrap confidence intervals for results</li>
+        <li><strong>Dataset:</strong> Multiple test sets with inter-annotator agreement (Cohen's kappa > 0.7)</li>
+        <li><strong>Ablation study:</strong> Show contribution of each component (AST + Symbol + CallGraph)</li>
+      </ul>
+
+      <div class="priority-banner priority-high">
+        <span class="priority-label">IR Path Advantage</span>
+        <span>Strong positioning if you have rigorous metrics + multiple baselines. Your ablation framework is already here.</span>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Path B: Software Engineering Convention</h3>
+      <p><strong>Best for:</strong> ICSE, FSE, ASE, or SANER</p>
+
+      <div class="card">
+        <h4>Structure</h4>
+        <pre>1. Abstract (250 words)
+2. Introduction (2 pages)
+3. Problem & Motivation (1-2 pages)
+4. Related Work (2 pages)
+5. Approach (3-4 pages)
+   - Koopa parser integration
+   - AST chunking strategy
+   - Symbol table slicing
+   - Call graph expansion
+6. Case Studies (3-5 pages)
+   - Real COBOL programs
+   - Before/after modernization scenario
+7. Evaluation (3-4 pages)
+   - Developer user study (n=3-10)
+   - Time/effort savings
+   - Comprehension metrics
+8. Threats to Validity (1 page)
+9. Conclusion (0.5 page)</pre>
+      </div>
+
+      <h4>Key SE Conventions:</h4>
+      <ul>
+        <li><strong>Case studies:</strong> Real programs from industry (not toy examples)</li>
+        <li><strong>Developer evaluation:</strong> Qualitative + quantitative (comprehension tests, time measurements)</li>
+        <li><strong>Threats to validity:</strong> Detailed discussion of limitations (generalizability, bias, threats)</li>
+        <li><strong>Practical focus:</strong> Show modernization workflow, time savings, business value</li>
+        <li><strong>Reproducibility:</strong> Code + dataset repo, Docker setup for Koopa</li>
+      </ul>
+
+      <div class="priority-banner priority-medium">
+        <span class="priority-label">SE Path Advantage</span>
+        <span>Stronger with real case studies and developer studies. Requires recruiting participants (higher effort).</span>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Path C: ML + Code Understanding Convention</h3>
+      <p><strong>Best for:</strong> NeurIPS, ICML, or ICLR (if you add learning component); or specialized ML4Code venues</p>
+
+      <div class="card">
+        <h4>Structure</h4>
+        <pre>1. Abstract (250 words)
+2. Introduction (2 pages)
+3. Related Work (2-3 pages)
+   - Code RAG (RepoAgent, RepoCoder, CodePlan)
+   - LLM code understanding
+   - Structured retrieval
+4. Method (3-4 pages)
+   - Formal problem definition
+   - Triple-source retrieval algorithm
+   - Scoring function
+   - Complexity analysis
+5. Experiments (4-5 pages)
+   - LLM-based evaluation
+   - Hallucination rates
+   - Grounding accuracy
+6. Analysis (2 pages)
+7. Conclusion (0.5 page)</pre>
+      </div>
+
+      <h4>Key ML Conventions:</h4>
+      <ul>
+        <li><strong>Algorithm formalization:</strong> Pseudocode, complexity analysis</li>
+        <li><strong>LLM evaluation:</strong> Run same query with different contexts; measure hallucination delta</li>
+        <li><strong>Grounding metrics:</strong> Symbol resolution accuracy, condition correctness</li>
+        <li><strong>Scaling:</strong> Show performance on progressively larger programs</li>
+        <li><strong>Embedding experiments:</strong> Optional — can add learned component for ICML positioning</li>
+      </ul>
+
+      <div class="priority-banner priority-high">
+        <span class="priority-label">ML Path Advantage</span>
+        <span>Highest impact venues. Best if you add learned component (e.g., learned scoring model). Otherwise position as "ML4Code application."</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>2. Recommended Path: IR + SE Hybrid</h2>
+    <p><strong>Why this works for you:</strong> Your project is fundamentally an IR problem (retrieval quality) with SE application (modernization). Hybrid positioning splits the difference.</p>
+
+    <div class="flow-diagram">
+      Submission #1: IR Venue (ACL/EMNLP)<br/>
+      [rigorous metrics + baselines]<br/>
+      ↓<br/>
+      Rejection or accept?<br/>
+      ↓<br/>
+      Submission #2: SE Venue (ICSE/FSE)<br/>
+      [case studies + developer study]
+    </div>
+
+    <h3>Venue Selection by Tier</h3>
+
+    <table class="venue-table">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Venue</th>
+          <th>Focus</th>
+          <th>Acceptance Rate</th>
+          <th>Timeline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tier 1 (SOTA)</strong></td>
+          <td>ACL / EMNLP</td>
+          <td>NLP + code understanding</td>
+          <td>~20–25%</td>
+          <td>Quarterly</td>
+        </tr>
+        <tr>
+          <td><strong>Tier 1 (SOTA)</strong></td>
+          <td>ICSE / FSE</td>
+          <td>Software engineering + tools</td>
+          <td>~20–25%</td>
+          <td>Annual</td>
+        </tr>
+        <tr>
+          <td><strong>Tier 2 (Strong)</strong></td>
+          <td>ASE / SANER</td>
+          <td>Automated SE + analysis</td>
+          <td>~35–40%</td>
+          <td>Annual</td>
+        </tr>
+        <tr>
+          <td><strong>Tier 2 (Strong)</strong></td>
+          <td>SIGIR / CIKM</td>
+          <td>Information retrieval</td>
+          <td>~30–35%</td>
+          <td>Annual</td>
+        </tr>
+        <tr>
+          <td><strong>Tier 3 (Specialized)</strong></td>
+          <td>CASCON / SCAM</td>
+          <td>Legacy systems + modernization</td>
+          <td>~50–60%</td>
+          <td>Annual</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="priority-banner priority-critical">
+      <span class="priority-label">Recommendation</span>
+      <span><strong>Target EMNLP first</strong> (Feb deadline, ~4 months prep). If rejected, ICSE next (Sept deadline, can add case studies). CASCON as fallback (higher accept rate, still respectable).</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>3. Critical Sections by Convention</h2>
+
+    <div class="subsection">
+      <h3>Abstract (250 words, all venues)</h3>
+      <ul>
+        <li><strong>Sentence 1:</strong> Problem statement (legacy modernization is hard)</li>
+        <li><strong>Sentence 2:</strong> Why existing methods fail (naive RAG has no semantic grounding)</li>
+        <li><strong>Sentence 3:</strong> Your key insight (structured parser outputs enable grounding)</li>
+        <li><strong>Sentences 4-6:</strong> Your contribution (triple-source RAG + ablation study)</li>
+        <li><strong>Sentences 7-8:</strong> Results (60% → 94% improvement, quantified)</li>
+        <li><strong>Sentence 9:</strong> Impact (accelerates COBOL modernization)</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <h3>Related Work (2-3 pages)</h3>
+      <p><strong>What to cover (in this order):</strong></p>
+      <ol>
+        <li><strong>Code RAG methods:</strong> RepoAgent, RepoCoder, CodePlan
+          <ul><li>Key insight: Show why none combine AST + Symbol Table + Call Graph</li></ul>
+        </li>
+        <li><strong>COBOL-specific:</strong> IBM Granite, Watsonx Code Assistant for Z
+          <ul><li>Key insight: They exist but focus on language modeling, not retrieval</li></ul>
+        </li>
+        <li><strong>Program understanding:</strong> Static analysis, data flow analysis, symbol tables
+          <ul><li>Key insight: These exist but not integrated into LLM retrieval</li></ul>
+        </li>
+        <li><strong>Your positioning:</strong> "First to systematically combine all three for COBOL"</li>
+      </ol>
+
+      <div class="card">
+        <strong>Related Work Table (put in paper)</strong>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>AST Aware</th>
+              <th>Symbol Table</th>
+              <th>Call Graph</th>
+              <th>COBOL</th>
+              <th>Open Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>RepoAgent</td>
+              <td class="checkmark"></td>
+              <td class="x-mark"></td>
+              <td class="checkmark"></td>
+              <td class="x-mark"></td>
+              <td class="checkmark"></td>
+            </tr>
+            <tr>
+              <td>RepoCoder</td>
+              <td class="checkmark"></td>
+              <td class="x-mark"></td>
+              <td class="x-mark"></td>
+              <td class="x-mark"></td>
+              <td class="checkmark"></td>
+            </tr>
+            <tr>
+              <td>CodePlan</td>
+              <td class="checkmark"></td>
+              <td class="checkmark"></td>
+              <td class="checkmark"></td>
+              <td class="x-mark"></td>
+              <td class="checkmark"></td>
+            </tr>
+            <tr>
+              <td><strong>This Work</strong></td>
+              <td class="checkmark"></td>
+              <td class="checkmark"></td>
+              <td class="checkmark"></td>
+              <td class="checkmark"></td>
+              <td class="checkmark"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Evaluation Section (varies by convention)</h3>
+
+      <h4>IR Convention Metrics:</h4>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Definition</th>
+            <th>Why It Matters for CodeRAG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>NDCG@k</strong></td>
+            <td>Normalized Discounted Cumulative Gain at rank k</td>
+            <td>Ranking quality; penalizes wrong paragraphs early</td>
+          </tr>
+          <tr>
+            <td><strong>Precision@k</strong></td>
+            <td>% correct in top-k</td>
+            <td>What fraction of retrieved paragraphs are relevant?</td>
+          </tr>
+          <tr>
+            <td><strong>Recall@k</strong></td>
+            <td>% of all relevant found in top-k</td>
+            <td>Did we get all needed context?</td>
+          </tr>
+          <tr>
+            <td><strong>F1</strong></td>
+            <td>Harmonic mean of precision & recall</td>
+            <td>Balanced measure</td>
+          </tr>
+          <tr>
+            <td><strong>Symbol Coverage</strong></td>
+            <td>% of expected symbols in retrieved context</td>
+            <td>Key for COBOL: are data definitions included?</td>
+          </tr>
+          <tr>
+            <td><strong>88-Condition Resolution</strong></td>
+            <td>% of COBOL conditions correctly identified</td>
+            <td>COBOL-specific; critical for business logic</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>SE Convention Metrics:</h4>
+      <ul>
+        <li><strong>Developer comprehension:</strong> Likert scale (1-5) on understanding with vs. without context</li>
+        <li><strong>Time to extract rule:</strong> Minutes to identify business logic</li>
+        <li><strong>Error rate:</strong> % of incorrect rule extractions</li>
+        <li><strong>Completeness:</strong> Did context include all necessary data definitions?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>4. Typical Sections Checklist</h2>
+
+    <div class="card">
+      <h4>Before Submitting</h4>
+      <ul>
+        <li><span class="checkmark"></span> Ground truth annotations exist (10+ queries annotated)</li>
+        <li><span class="checkmark"></span> 3+ real COBOL programs (not just loan_calc.cbl)</li>
+        <li><span class="checkmark"></span> Quantitative metrics computed (NDCG, Precision@k, F1)</li>
+        <li><span class="checkmark"></span> 5+ baselines implemented and compared</li>
+        <li><span class="checkmark"></span> Ablation study shows contribution of each component</li>
+        <li><span class="checkmark"></span> Statistical significance tests (p-values, confidence intervals)</li>
+        <li><span class="checkmark"></span> Code has type hints & docstrings</li>
+        <li><span class="checkmark"></span> All code is on public GitHub</li>
+        <li><span class="checkmark"></span> README explains how to reproduce results</li>
+        <li><span class="checkmark"></span> Related work table included</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>5. Example Results Tables</h2>
+
+    <h3>IR Convention Results Table</h3>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Baseline</th>
+          <th>NDCG@1</th>
+          <th>Precision@1</th>
+          <th>Symbol Coverage</th>
+          <th>88-Condition Accuracy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Random</td>
+          <td>0.00</td>
+          <td>0%</td>
+          <td>0%</td>
+          <td>0%</td>
+        </tr>
+        <tr>
+          <td>BM25 Only</td>
+          <td>0.45</td>
+          <td>45%</td>
+          <td>12%</td>
+          <td>0%</td>
+        </tr>
+        <tr>
+          <td>BM25 + Semantic</td>
+          <td>0.52</td>
+          <td>52%</td>
+          <td>25%</td>
+          <td>0%</td>
+        </tr>
+        <tr>
+          <td>AST Only (no slicing)</td>
+          <td>0.61</td>
+          <td>61%</td>
+          <td>40%</td>
+          <td>0%</td>
+        </tr>
+        <tr>
+          <td><strong>Proposed (Full)</strong></td>
+          <td><strong>0.89</strong></td>
+          <td><strong>89%</strong></td>
+          <td><strong>94%</strong></td>
+          <td><strong>100%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><em>Include p-values: Proposed vs. Best Baseline, p &lt; 0.01 (Mann-Whitney U test)</em></p>
+  </div>
+
+  <div class="section">
+    <h2>6. Common Pitfalls to Avoid</h2>
+
+    <div class="card">
+      <h4>❌ Evaluation Pitfalls</h4>
+      <ul>
+        <li>No ground truth annotations (reviewers will ask for this first)</li>
+        <li>Cherry-picked examples instead of average performance</li>
+        <li>Missing ablations (don't just compare full system vs. naive)</li>
+        <li>No error analysis (what does your method fail on?)</li>
+        <li>Significance claims without statistical tests</li>
+      </ul>
+
+      <h4>❌ Reproducibility Pitfalls</h4>
+      <ul>
+        <li>Code not on GitHub (non-negotiable)</li>
+        <li>Missing dataset or synthetic-only data</li>
+        <li>Vague hyperparameters ("tuned on dev set")</li>
+        <li>No instructions for running Koopa parser</li>
+        <li>No Docker container for dependencies</li>
+      </ul>
+
+      <h4>❌ Positioning Pitfalls</h4>
+      <ul>
+        <li>"Better than naive RAG" (weak claim; compare to industry standards)</li>
+        <li>Overgeneralization ("Works for all COBOL" from 1 program)</li>
+        <li>Missing related work (reviewers know this space)</li>
+        <li>No discussion of limitations (threats to validity)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>7. Publication Timeline & Deadlines</h2>
+
+    <table class="venue-table">
+      <thead>
+        <tr>
+          <th>Venue</th>
+          <th>Deadline</th>
+          <th>Notification</th>
+          <th>Conference</th>
+          <th>Prep Time Needed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>EMNLP 2025</strong></td>
+          <td>Feb 2025</td>
+          <td>May 2025</td>
+          <td>Nov 2025</td>
+          <td>4 months (start now)</td>
+        </tr>
+        <tr>
+          <td><strong>ICSE 2026</strong></td>
+          <td>Sept 2025</td>
+          <td>Feb 2026</td>
+          <td>May 2026</td>
+          <td>11 months</td>
+        </tr>
+        <tr>
+          <td><strong>FSE 2026</strong></td>
+          <td>May 2025</td>
+          <td>Aug 2025</td>
+          <td>Nov 2025</td>
+          <td>7 months</td>
+        </tr>
+        <tr>
+          <td><strong>CASCON 2025</strong></td>
+          <td>May 2025</td>
+          <td>Aug 2025</td>
+          <td>Oct 2025</td>
+          <td>7 months</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="next-steps">
+    <h3>🎯 Next Steps (Pick One)</h3>
+    <ol>
+      <li><strong>Evaluation Path (Fastest, 3 weeks):</strong> Add quantitative metrics + ground truth annotations + 5 baselines</li>
+      <li><strong>Dataset Path (Longest, 4 weeks):</strong> Curate 3-5 real COBOL programs + extract Koopa outputs</li>
+      <li><strong>Baseline Path (Quick win, 2 weeks):</strong> Implement 5 comparison baselines, generate results table</li>
+    </ol>
+    <p><strong>Recommendation:</strong> Start with Evaluation Path (highest ROI). You already have the baseline framework — fill in the metrics and annotations, run the ablation, get your results table. That alone is 80% of what reviewers need to believe your claims.</p>
+  </div>
+
+</div>
