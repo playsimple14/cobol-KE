@@ -1,0 +1,127 @@
+{
+  "node_type": "compilationGroup",
+  "program": "LNPROC01",
+  "children": [
+    {
+      "node_type": "identificationDivision",
+      "program_id": "LNPROC01"
+    },
+    {
+      "node_type": "dataDivision",
+      "sections": [
+        {
+          "name": "WORKING-STORAGE SECTION",
+          "symbols_count": 13
+        }
+      ]
+    },
+    {
+      "node_type": "procedureDivision",
+      "paragraphs": [
+        {
+          "name": "0000-MAIN-PROCESS",
+          "start_line": 41,
+          "end_line": 50,
+          "statements": [
+            {"type": "PERFORM", "target": "1000-EVAL-CUSTOMER-TIER"},
+            {"type": "IF", "condition": "LOAN-REJECTED", "then": [{"type": "DISPLAY"}], "else": [
+              {"type": "PERFORM", "target": "2000-CALC-INTEREST"},
+              {"type": "PERFORM", "target": "3000-APPLY-RISK-PENALTY"},
+              {"type": "PERFORM", "target": "4000-UPDATE-RECORD"}
+            ]},
+            {"type": "STOP"}
+          ]
+        },
+        {
+          "name": "1000-EVAL-CUSTOMER-TIER",
+          "start_line": 52,
+          "end_line": 69,
+          "statements": [
+            {
+              "type": "IF",
+              "condition": "CREDIT-POOR",
+              "then": [
+                {"type": "SET", "target": "LOAN-REJECTED", "to": "TRUE"},
+                {"type": "MOVE", "from": "00.00", "to": "WS-FINAL-INTEREST-RATE"}
+              ],
+              "else": [
+                {
+                  "type": "IF",
+                  "condition": "CREDIT-EXCELLENT",
+                  "then": [
+                    {"type": "SET", "target": "LOAN-APPROVED", "to": "TRUE"},
+                    {"type": "MOVE", "from": "00.00", "to": "WS-RISK-PREMIUM"}
+                  ],
+                  "else": [
+                    {
+                      "type": "IF",
+                      "condition": "CREDIT-GOOD",
+                      "then": [
+                        {"type": "SET", "target": "LOAN-APPROVED", "to": "TRUE"},
+                        {"type": "MOVE", "from": "01.25", "to": "WS-RISK-PREMIUM"}
+                      ],
+                      "else": [
+                        {"type": "SET", "target": "LOAN-MANUAL-REVIEW", "to": "TRUE"},
+                        {"type": "MOVE", "from": "02.50", "to": "WS-RISK-PREMIUM"}
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "2000-CALC-INTEREST",
+          "start_line": 71,
+          "end_line": 77,
+          "statements": [
+            {
+              "type": "COMPUTE",
+              "target": "WS-FINAL-INTEREST-RATE",
+              "expression": "WS-BASE-INTEREST-RATE + WS-RISK-PREMIUM"
+            },
+            {
+              "type": "COMPUTE",
+              "target": "WS-MONTHLY-INTEREST",
+              "expression": "(WS-LOAN-AMOUNT * (WS-FINAL-INTEREST-RATE / 100)) / 12"
+            },
+            {
+              "type": "COMPUTE",
+              "target": "WS-TOTAL-INTEREST",
+              "expression": "WS-MONTHLY-INTEREST * WS-LOAN-TERM-MONTHS"
+            }
+          ]
+        },
+        {
+          "name": "3000-APPLY-RISK-PENALTY",
+          "start_line": 79,
+          "end_line": 83,
+          "statements": [
+            {
+              "type": "IF",
+              "condition": "COLLATERAL-UNSEC AND NOT CREDIT-EXCELLENT",
+              "then": [
+                {
+                  "type": "COMPUTE",
+                  "target": "WS-TOTAL-INTEREST",
+                  "expression": "WS-TOTAL-INTEREST + (WS-LOAN-AMOUNT * 0.015)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "4000-UPDATE-RECORD",
+          "start_line": 85,
+          "end_line": 88,
+          "statements": [
+            {"type": "DISPLAY", "operand": "WS-CUST-ID"},
+            {"type": "DISPLAY", "operand": "WS-FINAL-INTEREST-RATE"},
+            {"type": "DISPLAY", "operand": "WS-TOTAL-INTEREST"}
+          ]
+        }
+      ]
+    }
+  ]
+}

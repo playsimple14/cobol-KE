@@ -1,0 +1,124 @@
+{
+  "program_id": "LNPROC01",
+  "symbols": [
+    {
+      "name": "WS-LOAN-RECORD",
+      "level": "01",
+      "pic": null,
+      "section": "WORKING-STORAGE",
+      "parent": null,
+      "children": ["WS-CUST-ID", "WS-CREDIT-SCORE", "WS-LOAN-AMOUNT", "WS-LOAN-TERM-MONTHS", "WS-COLLATERAL-TYPE"]
+    },
+    {
+      "name": "WS-CUST-ID",
+      "level": "05",
+      "pic": "X(8)",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-LOAN-RECORD",
+      "condition_88s": []
+    },
+    {
+      "name": "WS-CREDIT-SCORE",
+      "level": "05",
+      "pic": "9(3)",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-LOAN-RECORD",
+      "condition_88s": [
+        {"name": "CREDIT-EXCELLENT", "range": "750 THRU 850"},
+        {"name": "CREDIT-GOOD", "range": "650 THRU 749"},
+        {"name": "CREDIT-FAIR", "range": "580 THRU 649"},
+        {"name": "CREDIT-POOR", "range": "300 THRU 579"}
+      ]
+    },
+    {
+      "name": "WS-LOAN-AMOUNT",
+      "level": "05",
+      "pic": "9(7)V99",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-LOAN-RECORD",
+      "condition_88s": []
+    },
+    {
+      "name": "WS-LOAN-TERM-MONTHS",
+      "level": "05",
+      "pic": "9(3)",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-LOAN-RECORD",
+      "condition_88s": []
+    },
+    {
+      "name": "WS-COLLATERAL-TYPE",
+      "level": "05",
+      "pic": "X(4)",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-LOAN-RECORD",
+      "condition_88s": [
+        {"name": "COLLATERAL-PROPERTY", "value": "'PROP'"},
+        {"name": "COLLATERAL-VEHICLE", "value": "'VEHI'"},
+        {"name": "COLLATERAL-UNSEC", "value": "'NONE'"}
+      ]
+    },
+    {
+      "name": "WS-CALC-VARS",
+      "level": "01",
+      "pic": null,
+      "section": "WORKING-STORAGE",
+      "parent": null,
+      "children": ["WS-BASE-INTEREST-RATE", "WS-RISK-PREMIUM", "WS-FINAL-INTEREST-RATE", "WS-MONTHLY-INTEREST", "WS-TOTAL-INTEREST", "WS-STATUS-FLAG"]
+    },
+    {
+      "name": "WS-BASE-INTEREST-RATE",
+      "level": "05",
+      "pic": "9(2)V99",
+      "default": "05.50",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-CALC-VARS",
+      "condition_88s": []
+    },
+    {
+      "name": "WS-RISK-PREMIUM",
+      "level": "05",
+      "pic": "9(2)V99",
+      "default": "00.00",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-CALC-VARS",
+      "condition_88s": []
+    },
+    {
+      "name": "WS-FINAL-INTEREST-RATE",
+      "level": "05",
+      "pic": "9(2)V99",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-CALC-VARS",
+      "condition_88s": []
+    },
+    {
+      "name": "WS-MONTHLY-INTEREST",
+      "level": "05",
+      "pic": "9(7)V99",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-CALC-VARS",
+      "condition_88s": []
+    },
+    {
+      "name": "WS-TOTAL-INTEREST",
+      "level": "05",
+      "pic": "9(8)V99",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-CALC-VARS",
+      "condition_88s": []
+    },
+    {
+      "name": "WS-STATUS-FLAG",
+      "level": "05",
+      "pic": "X(1)",
+      "section": "WORKING-STORAGE",
+      "parent": "WS-CALC-VARS",
+      "condition_88s": [
+        {"name": "LOAN-APPROVED", "value": "'A'"},
+        {"name": "LOAN-REJECTED", "value": "'R'"},
+        {"name": "LOAN-MANUAL-REVIEW", "value": "'M'"}
+      ]
+    }
+  ]
+}

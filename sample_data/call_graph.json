@@ -1,0 +1,61 @@
+{
+  "program_id": "LNPROC01",
+  "nodes": [
+    {
+      "id": "0000-MAIN-PROCESS",
+      "type": "PARAGRAPH",
+      "start_line": 41,
+      "end_line": 50
+    },
+    {
+      "id": "1000-EVAL-CUSTOMER-TIER",
+      "type": "PARAGRAPH",
+      "start_line": 52,
+      "end_line": 69
+    },
+    {
+      "id": "2000-CALC-INTEREST",
+      "type": "PARAGRAPH",
+      "start_line": 71,
+      "end_line": 77
+    },
+    {
+      "id": "3000-APPLY-RISK-PENALTY",
+      "type": "PARAGRAPH",
+      "start_line": 79,
+      "end_line": 83
+    },
+    {
+      "id": "4000-UPDATE-RECORD",
+      "type": "PARAGRAPH",
+      "start_line": 85,
+      "end_line": 88
+    }
+  ],
+  "edges": [
+    {
+      "source": "0000-MAIN-PROCESS",
+      "target": "1000-EVAL-CUSTOMER-TIER",
+      "type": "PERFORM",
+      "line": 42
+    },
+    {
+      "source": "0000-MAIN-PROCESS",
+      "target": "2000-CALC-INTEREST",
+      "type": "PERFORM",
+      "line": 46
+    },
+    {
+      "source": "0000-MAIN-PROCESS",
+      "target": "3000-APPLY-RISK-PENALTY",
+      "type": "PERFORM",
+      "line": 47
+    },
+    {
+      "source": "0000-MAIN-PROCESS",
+      "target": "4000-UPDATE-RECORD",
+      "type": "PERFORM",
+      "line": 48
+    }
+  ]
+}
